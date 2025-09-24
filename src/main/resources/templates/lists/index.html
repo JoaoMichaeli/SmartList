@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Minhas Listas de Compras</title>
+    <title th:text="#{shoppingLists.title}">Minhas Listas de Compras</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -13,10 +13,11 @@
 <div class="container mx-auto px-4 py-6">
 
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Minhas Listas de Compras</h2>
+        <h2 class="text-2xl font-bold text-gray-800" th:text="#{shoppingLists.title}">Minhas Listas de Compras</h2>
         <a th:href="@{/shopping-lists/form}"
            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition">
-            <span class="material-icons">add</span> Nova Lista
+            <span class="material-icons">add</span>
+            <span th:text="#{shoppingLists.new}">Nova Lista</span>
         </a>
     </div>
 
@@ -24,11 +25,11 @@
         <table class="min-w-full bg-white rounded-xl shadow-md divide-y divide-gray-200">
             <thead class="bg-gray-50">
             <tr>
-                <th class="px-4 py-2 text-left text-gray-700 font-medium">Título</th>
-                <th class="px-4 py-2 text-left text-gray-700 font-medium">Status</th>
-                <th class="px-4 py-2 text-left text-gray-700 font-medium">Total</th>
-                <th class="px-4 py-2 text-left text-gray-700 font-medium">Itens checados</th>
-                <th class="px-4 py-2 text-left text-gray-700 font-medium">Ações</th>
+                <th class="px-4 py-2 text-left text-gray-700 font-medium" th:text="#{table.title}">Título</th>
+                <th class="px-4 py-2 text-left text-gray-700 font-medium" th:text="#{table.status}">Status</th>
+                <th class="px-4 py-2 text-left text-gray-700 font-medium" th:text="#{table.total}">Total</th>
+                <th class="px-4 py-2 text-left text-gray-700 font-medium" th:text="#{table.checked}">Itens checados</th>
+                <th class="px-4 py-2 text-left text-gray-700 font-medium" th:text="#{table.actions}">Ações</th>
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -40,16 +41,19 @@
                 <td class="px-4 py-2 flex gap-2">
                     <a th:href="@{/shopping-lists/{id}(id=${list.id})}"
                        class="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition text-sm">
-                        <span class="material-icons text-sm">visibility</span> Detalhes
+                        <span class="material-icons text-sm">visibility</span>
+                        <span th:text="#{action.details}">Detalhes</span>
                     </a>
                     <a th:href="@{/shopping-lists/{id}/edit(id=${list.id})}"
                        class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded transition text-sm">
-                        <span class="material-icons text-sm">edit</span> Editar
+                        <span class="material-icons text-sm">edit</span>
+                        <span th:text="#{action.edit}">Editar</span>
                     </a>
                     <form th:action="@{/shopping-lists/{id}/delete(id=${list.id})}" method="post">
                         <button type="submit"
                                 class="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition text-sm">
-                            <span class="material-icons text-sm">delete</span> Excluir
+                            <span class="material-icons text-sm">delete</span>
+                            <span th:text="#{action.delete}">Excluir</span>
                         </button>
                     </form>
                 </td>

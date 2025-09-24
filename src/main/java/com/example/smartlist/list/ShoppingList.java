@@ -23,6 +23,7 @@ public class ShoppingList {
     @NotBlank(message = "{item.title.notblank}")
     private String title;
 
+    @NotBlank(message = "{item.status.notblank}")
     private String status;
 
     @Transient
