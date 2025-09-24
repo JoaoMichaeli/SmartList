@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<th:block th:replace="fragments/header :: header"></th:block>
+
+<main class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6" th:text="${shoppingList.id} != null ? 'Editar Lista' : 'Nova Lista'">
+        Nova Lista
+    </h2>
+
+    <form th:action="${shoppingList.id} != null ? @{/shopping-lists/{id}(id=${shoppingList.id})} : @{/shopping-lists}"
+          th:object="${shoppingList}" method="post" class="space-y-4">
+
+        <div class="form-control w-full">
+            <label class="label">
+                <span class="label-text">Título:</span>
+            </label>
+            <input type="text" th:field="*{title}" placeholder="Digite o título"
+                   class="input input-bordered w-full">
+            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-error text-sm"></span>
+        </div>
+
+        <div class="form-control w-full">
+            <label class="label">
+                <span class="label-text">Status:</span>
+            </label>
+            <input type="text" th:field="*{status}" placeholder="Digite o status"
+                   class="input input-bordered w-full">
+        </div>
+
+        <div class="form-control w-full">
+            <label class="label">
+                <span class="label-text">Total:</span>
+            </label>
+            <input type="text" th:field="*{total}" readonly class="input input-bordered w-full bg-gray-100">
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Salvar</button>
+    </form>
+
+    <a th:href="@{/shopping-lists}" class="btn btn-ghost mt-4 inline-block">Voltar</a>
+</main>

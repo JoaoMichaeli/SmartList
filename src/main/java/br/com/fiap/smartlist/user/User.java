@@ -2,18 +2,20 @@ package br.com.fiap.smartlist.user;
 
 import br.com.fiap.smartlist.list.ShoppingList;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;
 
 @Entity
 @Data
-@Table(name = "smartlist_user")
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "smartlistuser")
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -26,10 +28,11 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShoppingList> shoppingLists;
 
-    public User(OAuth2User principal) {
+    public User(OAuth2User principal, String email) {
         var attributes = principal.getAttributes();
-        this.name = (String) attributes.getOrDefault("name", "Usuário");
-        this.email = (String) attributes.get("email");
+        String login = (String) attributes.get("login");
+        this.name = (String) attributes.getOrDefault("name", login != null ? login : "Usuário");
+        this.email = email;
         this.avatarUrl = (String) attributes.getOrDefault("avatar_url", attributes.get("picture"));
     }
 }

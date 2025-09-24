@@ -10,95 +10,78 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/list")
+@RequestMapping("/shopping-lists")
 @RequiredArgsConstructor
 public class ShoppingListController {
 
-    private final ShoppingListService shoppingListService;
-    private final MessageHelper messageHelper;
+    private final ShoppingListService service;
     private final UserService userService;
+    private final MessageHelper messageHelper;
 
     @GetMapping
-    public String index(@AuthenticationPrincipal OAuth2User principal,
-                        Model model) {
-        User currentUser = userService.getOrCreateUser(principal);
-        model.addAttribute("lists", shoppingListService.findByUser(currentUser));
+    public String index(@AuthenticationPrincipal OAuth2User principal, Model model) {
+        User user = userService.registerOrGet(principal);
+        model.addAttribute("lists", service.findByUser(user));
         return "lists/index";
     }
 
     @GetMapping("/form")
-    public String form(ShoppingList shoppingList) {
+    public String form(ShoppingList list) {
         return "lists/form";
     }
 
-    @PostMapping("/form")
-    public String create(@Valid ShoppingList shoppingList,
-                         BindingResult result,
+    @PostMapping
+    public String create(@Valid ShoppingList list, BindingResult result,
                          @AuthenticationPrincipal OAuth2User principal,
                          RedirectAttributes redirect) {
         if (result.hasErrors()) return "lists/form";
-
-        User currentUser = userService.getOrCreateUser(principal);
-        shoppingList.setUser(currentUser);
-        shoppingListService.save(shoppingList);
-
+        User user = userService.registerOrGet(principal);
+        list.setUser(user);
+        service.save(list);
         redirect.addFlashAttribute("message", messageHelper.get("list.create.success"));
         return "redirect:/shopping-lists";
     }
 
-    @GetMapping("/{listId}/edit")
-    public String editForm(@PathVariable Long listId,
-                           @AuthenticationPrincipal OAuth2User principal,
-                           Model model) {
-        User currentUser = userService.getOrCreateUser(principal);
-        ShoppingList list = shoppingListService.getByIdAndUser(listId, currentUser);
-
-        model.addAttribute("shoppingList", list);
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable Long id, Model model,
+                       @AuthenticationPrincipal OAuth2User principal) {
+        User user = userService.registerOrGet(principal);
+        model.addAttribute("shoppingList", service.getByIdAndUser(id, user));
         return "lists/form";
     }
 
-    @PostMapping("/{listId}/edit")
-    public String update(@PathVariable Long listId,
-                         @Valid ShoppingList updatedList,
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id, @Valid ShoppingList updatedList,
                          BindingResult result,
                          @AuthenticationPrincipal OAuth2User principal,
                          RedirectAttributes redirect) {
         if (result.hasErrors()) return "lists/form";
-
-        User currentUser = userService.getOrCreateUser(principal);
-        shoppingListService.update(listId, updatedList, currentUser);
-
+        User user = userService.registerOrGet(principal);
+        service.update(id, updatedList, user);
         redirect.addFlashAttribute("message", messageHelper.get("list.update.success"));
         return "redirect:/shopping-lists";
     }
 
-    @PostMapping("/{listId}/delete")
-    public String delete(@PathVariable Long listId,
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Long id,
                          @AuthenticationPrincipal OAuth2User principal,
                          RedirectAttributes redirect) {
-        User currentUser = userService.getOrCreateUser(principal);
-        shoppingListService.deleteByIdAndUser(listId, currentUser);
-
+        User user = userService.registerOrGet(principal);
+        service.deleteByIdAndUser(id, user);
         redirect.addFlashAttribute("message", messageHelper.get("list.delete.success"));
         return "redirect:/shopping-lists";
     }
 
-    @GetMapping("/{listId}")
-    public String details(@PathVariable Long listId,
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id,
                           @AuthenticationPrincipal OAuth2User principal,
                           Model model) {
-        User currentUser = userService.getOrCreateUser(principal);
-        ShoppingList list = shoppingListService.getByIdAndUser(listId, currentUser);
-
-        model.addAttribute("list", list);
-        model.addAttribute("items", list.getItems());
+        User user = userService.registerOrGet(principal);
+        model.addAttribute("list", service.getByIdAndUser(id, user));
         return "lists/details";
     }
 }

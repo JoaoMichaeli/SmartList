@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<th:block th:replace="fragments/header :: header"></th:block>
+
+<main class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-xl font-bold mb-6" th:text="${item.id} != null ? 'Editar Item' : 'Novo Item'">Novo Item</h2>
+
+    <form th:action="${item.id} != null ? @{/shopping-lists/{listId}/items/{itemId}(listId=${list.id}, itemId=${item.id})} : @{/shopping-lists/{listId}/items(listId=${list.id})}"
+          th:object="${item}" method="post" class="space-y-4">
+
+        <div class="form-control w-full">
+            <label class="label">
+                <span class="label-text">Nome:</span>
+            </label>
+            <input type="text" th:field="*{name}" placeholder="Digite o nome do item"
+                   class="input input-bordered w-full" />
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm mt-1 block"></span>
+        </div>
+
+        <div class="form-control w-full">
+            <label class="label">
+                <span class="label-text">Preço:</span>
+            </label>
+            <input type="text" th:field="*{price}" placeholder="Digite o preço"
+                   class="input input-bordered w-full" />
+            <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-red-500 text-sm mt-1 block"></span>
+        </div>
+
+        <div class="form-control">
+            <label class="label cursor-pointer">
+                <span class="label-text">Checado:</span>
+                <input type="checkbox" th:field="*{checked}" class="checkbox checkbox-primary ml-2" />
+            </label>
+        </div>
+
+        <div class="flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a th:href="@{/shopping-lists/{id}(id=${list.id})}" class="btn btn-ghost">Voltar</a>
+        </div>
+    </form>
+</main>

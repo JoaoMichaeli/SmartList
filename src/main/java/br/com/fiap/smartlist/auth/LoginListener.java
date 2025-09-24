@@ -13,10 +13,9 @@ public class LoginListener implements ApplicationListener<AuthenticationSuccessE
 
     private final UserService userService;
 
-
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         var principal = (OAuth2User) event.getAuthentication().getPrincipal();
-        userService.register(principal);
+        userService.registerOrGet(principal);
     }
 }

@@ -1,11 +1,8 @@
 package br.com.fiap.smartlist.list;
 
-import br.com.fiap.smartlist.config.MessageHelper;
 import br.com.fiap.smartlist.user.User;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,36 +10,32 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ShoppingListService {
 
-    private final ShoppingListRepository shoppingListRepository;
-    private final MessageHelper messageHelper;
+    private final ShoppingListRepository repository;
 
-    @Transactional(readOnly = true)
-    public ShoppingList getByIdAndUser(long listId, User currentUser) {
-        return (ShoppingList) shoppingListRepository.findByIdAndUser(listId, currentUser)
-                .orElseThrow(() -> new RuntimeException(messageHelper.get("list.notfound")));
+    public List<ShoppingList> findByUser(User user) {
+        return repository.findByUser(user);
     }
 
-    @Transactional(readOnly = true)
-    public List<ShoppingList> findByUser(User currentUser) {
-        return shoppingListRepository.findByUser(currentUser);
+    public ShoppingList save(ShoppingList list) {
+        return repository.save(list);
     }
 
-    @Transactional
-    public void save(@Valid ShoppingList shoppingList) {
-        shoppingListRepository.save(shoppingList);
+    public ShoppingList getByIdAndUser(Long id, User user) {
+        return repository.findById(id)
+                .filter(l -> l.getUser().getId().equals(user.getId()))
+                .orElseThrow(() -> new RuntimeException("Lista não encontrada!"));
     }
 
-    @Transactional
-    public void update(Long listId, @Valid ShoppingList updatedList, User currentUser) {
-        ShoppingList existing = getByIdAndUser(listId, currentUser);
-        existing.setTitle(updatedList.getTitle());
-        existing.setStatus(updatedList.getStatus());
-        shoppingListRepository.save(existing);
+    public ShoppingList update(Long id, ShoppingList updatedList, User user) {
+        ShoppingList list = getByIdAndUser(id, user);
+        list.setTitle(updatedList.getTitle());
+        list.setStatus(updatedList.getStatus());
+        list.setTotal(updatedList.getTotal());
+        return repository.save(list);
     }
 
-    @Transactional
-    public void deleteByIdAndUser(Long listId, User currentUser) {
-        ShoppingList existing = getByIdAndUser(listId, currentUser);
-        shoppingListRepository.delete(existing);
+    public void deleteByIdAndUser(Long id, User user) {
+        ShoppingList list = getByIdAndUser(id, user);
+        repository.delete(list);
     }
 }

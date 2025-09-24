@@ -4,10 +4,7 @@ import br.com.fiap.smartlist.item.ProductItem;
 import br.com.fiap.smartlist.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,7 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShoppingList {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "{item.title.notblank}")
@@ -28,10 +27,15 @@ public class ShoppingList {
 
     private BigDecimal total;
 
+    @Transient
+    public long getCheckedCount() {
+        if (items == null) return 0;
+        return items.stream().filter(ProductItem::isChecked).count();
+    }
+
     @ManyToOne
     private User user;
 
     @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductItem> items;
 }
-

@@ -7,14 +7,17 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
 
-    public User register(OAuth2User principal) {
-        var user = userRepository.findByEmail(principal.getAttributes().get("email").toString());
-        return user.orElseGet(() -> userRepository.save(new User(principal)));
-    }
+    public User registerOrGet(OAuth2User principal) {
+        var attributes = principal.getAttributes();
+        String rawEmail = (String) attributes.get("email");
+        String finalEmail = (rawEmail == null || rawEmail.isBlank())
+                ? attributes.get("login") + "@users.noreply.github.com"
+                : rawEmail;
 
-    public User getOrCreateUser(OAuth2User user) {
-        return null;
+        return userRepository.findByEmail(finalEmail)
+                .orElseGet(() -> userRepository.save(new User(principal, finalEmail)));
     }
 }

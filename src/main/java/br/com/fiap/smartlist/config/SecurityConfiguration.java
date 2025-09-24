@@ -12,9 +12,16 @@ public class SecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(login -> login.defaultSuccessUrl("/list"))
+                .oauth2Login(login -> login
+                        .defaultSuccessUrl("/shopping-lists", true)
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                        .permitAll()
+                )
                 .build();
     }
 }

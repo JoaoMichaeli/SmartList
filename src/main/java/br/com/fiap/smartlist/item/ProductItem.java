@@ -3,10 +3,8 @@ package br.com.fiap.smartlist.item;
 import br.com.fiap.smartlist.list.ShoppingList;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -16,20 +14,19 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductItem {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "{list.name.notblank}")
+    @NotBlank(message = "{item.name.notblank}")
     private String name;
 
-    private Long quantity;
-
+    @PositiveOrZero(message = "{item.price.positive}")
     private BigDecimal price;
 
-    private Boolean checked = false;
+    private boolean checked;
 
     @ManyToOne
     private ShoppingList shoppingList;
-
 }
-
