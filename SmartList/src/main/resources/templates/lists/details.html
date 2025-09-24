@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartList - Detalhes</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+<!-- Header -->
+<th:block th:replace="fragments/header :: header"></th:block>
+
+<!-- Main Content -->
+<main class="container mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
+
+    <h2 class="text-3xl font-bold text-gray-800 mb-6" th:text="${list.title}">Lista de Compras</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 text-gray-700">
+        <p class="font-semibold">
+            Status: <span class="font-normal" th:text="${list.status}">Aberta</span>
+        </p>
+        <p class="font-semibold">
+            Total: <span class="font-normal" th:text="${total}">0.00</span>
+        </p>
+        <p class="font-semibold">
+            Itens checados: <span class="font-normal" th:text="${checkedCount}">0</span>
+        </p>
+    </div>
+
+    <a th:href="@{/shopping-lists/{id}/items/form(id=${list.id})}"
+       class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition mb-6">
+        <span class="material-icons">add</span> Adicionar Item
+    </a>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
+            <thead class="bg-gray-50">
+            <tr>
+                <th class="px-4 py-2 text-left text-gray-700 font-medium">Nome</th>
+                <th class="px-4 py-2 text-left text-gray-700 font-medium">Preço</th>
+                <th class="px-4 py-2 text-left text-gray-700 font-medium">Checado</th>
+                <th class="px-4 py-2 text-left text-gray-700 font-medium">Ações</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+            <tr th:each="item : ${list.items}" class="hover:bg-gray-50">
+                <td class="px-4 py-2 text-gray-800 font-medium" th:text="${item.name}">Produto</td>
+                <td class="px-4 py-2 text-gray-800" th:text="${item.price}">0.00</td>
+                <td class="px-4 py-2">
+                    <input type="checkbox" th:checked="${item.checked}" disabled
+                           class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
+                </td>
+                <td class="px-4 py-2 flex gap-2">
+                    <a th:href="@{/shopping-lists/{listId}/items/{itemId}/edit(listId=${list.id}, itemId=${item.id})}"
+                       class="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded transition">
+                        <span class="material-icons text-sm">edit</span> Editar
+                    </a>
+                    <form th:action="@{/shopping-lists/{listId}/items/{itemId}/delete(listId=${list.id}, itemId=${item.id})}"
+                          method="post" class="inline">
+                        <button type="submit"
+                                class="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition">
+                            <span class="material-icons text-sm">delete</span> Excluir
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a th:href="@{/shopping-lists}"
+       class="inline-flex items-center gap-1 mt-6 text-gray-700 hover:text-gray-900 transition">
+        <span class="material-icons">arrow_back</span> Voltar
+    </a>
+
+</main>
+
+</body>
+</html>

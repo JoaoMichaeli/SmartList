@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartList - Item</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+<th:block th:replace="fragments/header :: header"></th:block>
+
+<div class="container mx-auto mt-12 max-w-lg">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800"
+        th:text="${item.id} != null ? 'Editar Item' : 'Novo Item'">
+        Novo Item
+    </h2>
+
+    <form th:action="${item.id} != null ? @{/shopping-lists/{listId}/items/{itemId}(listId=${list.id}, itemId=${item.id})} : @{/shopping-lists/{listId}/items(listId=${list.id})}"
+          th:object="${item}" method="post" class="bg-white p-6 rounded-xl shadow-lg space-y-5">
+
+        <!-- Nome -->
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">Nome</label>
+            <input type="text" th:field="*{name}" placeholder="Nome do item"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm mt-1 block"></span>
+        </div>
+
+        <!-- Preço -->
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">Preço</label>
+            <input type="text" th:field="*{price}" placeholder="Preço do item"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-red-500 text-sm mt-1 block"></span>
+        </div>
+
+        <!-- Checado -->
+        <div class="flex items-center gap-2">
+            <input type="checkbox" th:field="*{checked}" class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
+            <label class="text-gray-700 font-medium cursor-pointer">Checado</label>
+        </div>
+
+        <!-- Botões -->
+        <div class="flex gap-3 mt-6">
+            <button type="submit"
+                    class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition w-1/2">
+                <span class="material-icons">save</span> Salvar
+            </button>
+            <a th:href="@{/shopping-lists/{id}(id=${list.id})}"
+               class="flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition w-1/2">
+                <span class="material-icons">arrow_back</span> Voltar
+            </a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

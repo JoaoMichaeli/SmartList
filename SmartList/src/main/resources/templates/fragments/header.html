@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartList</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+<header class="bg-green-500 text-white shadow-md">
+    <div class="container mx-auto flex flex-wrap items-center justify-between p-4">
+        <h1 class="text-2xl font-bold">SmartList</h1>
+        <nav class="flex items-center gap-2">
+            <a th:href="@{/shopping-lists}"
+               class="flex items-center gap-1 bg-green-600 hover:bg-green-700 transition px-3 py-1 rounded">
+                <span class="material-icons">list</span> Minhas Listas
+            </a>
+            <a th:href="@{/logout}"
+               class="flex items-center gap-1 bg-green-600 hover:bg-green-700 transition px-3 py-1 rounded">
+                <span class="material-icons">logout</span> Sair
+            </a>
+        </nav>
+    </div>
+</header>
+
+<!-- Conteúdo principal -->
+<main class="container mx-auto mt-6">
+
+    <!-- Área substituível pelo th:replace -->
+    <div th:replace="~{::body}"></div>
+
+    <!-- Exemplo de seção com botões -->
+    <section class="bg-white shadow-md rounded-lg p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Botões de Exemplo</h2>
+        <div class="flex gap-2 flex-wrap">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">Primário</button>
+            <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition">Sucesso</button>
+            <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded transition">Aviso</button>
+            <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition">Erro</button>
+        </div>
+    </section>
+
+</main>
+
+<!-- Rodapé simples -->
+<footer class="bg-gray-200 text-gray-700 mt-10 py-4 text-center">
+    &copy; 2025 SmartList. Todos os direitos reservados.
+</footer>
+
+</body>
+</html>
