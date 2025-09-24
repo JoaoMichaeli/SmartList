@@ -1,4 +1,4 @@
-# SmartList
+# 🛒 SmartList
 
 SmartList é uma aplicação web para gerenciamento de listas de compras, permitindo criar, editar, visualizar e excluir listas e itens de forma simples e intuitiva. O projeto inclui **suporte a internacionalização (i18n)** e **validação de dados** usando Bean Validation, com mensagens em português e inglês.
 
